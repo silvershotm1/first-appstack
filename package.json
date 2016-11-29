@@ -2,7 +2,7 @@
   "name": "app-stack",
   "version": "1.0.0",
   "description": "First time building an appication stack",
-  "main": "index.js",
+  "main": "server.js",
   "directories": {
     "test": "test"
   },
