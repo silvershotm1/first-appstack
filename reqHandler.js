@@ -1,24 +1,8 @@
-// function start() {
-//   console.log('Request Handler *start* was called');
-//   function sleep(milliSeconds) {
-//     var startTime = new Date().getTime();
-//     while (new Date().getTime() < startTime + milliSeconds);
-//   }
-//   sleep(10000);
-//   return 'Hello Start';
-// }
-// function upload() {
-//   console.log('Request Handler *upload* was called');
-//   return 'Hello Upload';
-// }
-//
-// exports.start = start;
-// exports.upload = upload;
+// var querystring = require('querystring');
+var fs = require('fs');
+var formidable = require('formidable');
 
-// var exec = require('child_process').exec;
-var querystring = require('querystring');
-
-function start(res, postData) {
+function start(res) {
   console.log('Request Handler *START* was called');
 
   var body = '<html>'+
@@ -40,13 +24,35 @@ function start(res, postData) {
   res.end();
 }
 
-function upload(res, postData) {
+function upload(res, req) {
   console.log('Request Handler *UPLOAD* was called');
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.write('You have sent the text: ' + querystring.parse(postData).text);
-  res.end();
+  var form = new formidable.IncomingForm();
+  console.log('about to parse');
+  form.parse(req, function(err, fields, files) {
+    console.log('parsing done');
 
+    fs.rename(files.upload.path, '/tmp/test.png', function(err) {
+      if (err) {
+        fs.unlink('/tmp/test.png');
+        fs.rename(files.upload.path, '/tmp/test.png');
+      }
+    });
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write('received image: </br>');
+    res.write('<img src=\'/show\' />');  // ABLE TO SHOW PICS
+    // res.write('<img src="/tmp/test.png"');
+    //res.write(`img src=${show(WHATEVER)}`);
+    res.end();
+  });
+
+}
+
+function show(res) {
+  console.log('Request Handler *SHOW* was called');
+  res.writeHead(200, {'Content-Type': 'image/png'});
+  fs.createReadStream('/tmp/test.png').pipe(res);
 }
 
 exports.start = start;
 exports.upload = upload;
+exports.show = show;
