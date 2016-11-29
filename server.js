@@ -10,15 +10,30 @@
 
 // REFACTOR WITH ASYNC
 
-var http = require('http');
+// var http = require('http');
+//
+// function onRequest(req, res){
+//   console.log('Request Received');
+//   res.writeHead(200, {'Content-Type': 'text/plain'});
+//   res.write('Hello World');
+//   res.end();
+// }
+//
+// http.createServer(onRequest).listen(8888);
+//
+// console.log('The Server has Started');
 
-function onRequest(req, res){
+//  CREATING OWN VARIABLE FOR MODULE
+
+var internet = require('http');
+
+function onRequest(req, res) {
   console.log('Request Received');
-  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.writeHead(200,{'Content-Type': 'text/plain'});
   res.write('Hello World');
   res.end();
 }
 
-http.createServer(onRequest).listen(8888);
+internet.createServer(onRequest).listen(8888);
 
-console.log('The Server has Started');
+console.log('The Server has started');
